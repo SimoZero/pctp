@@ -1,0 +1,6 @@
+@pctp_HostAddress = http://localhost:5169
+
+GET {{pctp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
