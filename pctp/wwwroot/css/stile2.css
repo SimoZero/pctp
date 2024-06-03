@@ -1,0 +1,24 @@
+﻿body {
+}
+
+#scrittaBiblioteca{
+     font-weight: bold;
+}
+
+#h5Disponibili {
+    margin-bottom: 0px;
+}
+
+#divLibri {
+    background-color:wheat;
+}
+
+.immagineCentro {
+    height: 500px;
+    width: 350px;
+}
+
+.immagine {
+    height: 500px;
+    width: 300px;
+}
