@@ -4,6 +4,7 @@ using pctp.Models;
 using pctp.Models.Dto;
 using pctp.Data;
 using prova999.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,18 +28,26 @@ namespace pctp.Controllers
         public ActionResult<IEnumerable<LibroDTO>> GetLibros()
         {
             _logger.Log("Getting all libros", "");
-            var libros = _context.Libri.ToList();
-            var libroDTOs = libros.Select(libro => new LibroDTO
+            try
             {
-                Isbn = libro.Isbn,
-                Titolo = libro.Titolo,
-                Img = libro.Img,
-                Autore = libro.Autore,
-                Genere = libro.Genere,
-                Anno = libro.Anno
-            });
+                var libros = _context.Libri.ToList();
+                var libroDTOs = libros.Select(libro => new LibroDTO
+                {
+                    Isbn = libro.Isbn,
+                    Titolo = libro.Titolo,
+                    Img = libro.Img,
+                    Autore = libro.Autore,
+                    Genere = libro.Genere,
+                    Anno = libro.Anno
+                });
 
-            return Ok(libroDTOs);
+                return Ok(libroDTOs);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error in GetLibros: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpGet("{isbn}", Name = "GetLibro")]
@@ -53,23 +62,31 @@ namespace pctp.Controllers
                 return BadRequest();
             }
 
-            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
-            if (libro == null)
+            try
             {
-                return NotFound();
+                var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
+                if (libro == null)
+                {
+                    return NotFound();
+                }
+
+                var libroDTO = new LibroDTO
+                {
+                    Isbn = libro.Isbn,
+                    Titolo = libro.Titolo,
+                    Img = libro.Img,
+                    Autore = libro.Autore,
+                    Genere = libro.Genere,
+                    Anno = libro.Anno
+                };
+
+                return Ok(libroDTO);
             }
-
-            var libroDTO = new LibroDTO
+            catch (Exception ex)
             {
-                Isbn = libro.Isbn,
-                Titolo = libro.Titolo,
-                Img = libro.Img,
-                Autore = libro.Autore,
-                Genere = libro.Genere,
-                Anno = libro.Anno
-            };
-
-            return Ok(libroDTO);
+                _logger.Log("Error in GetLibro: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPost]
@@ -83,20 +100,28 @@ namespace pctp.Controllers
                 return BadRequest(libroDTO);
             }
 
-            var libro = new Libro
+            try
             {
-                Isbn = libroDTO.Isbn,
-                Titolo = libroDTO.Titolo,
-                Img = libroDTO.Img,
-                Autore = libroDTO.Autore,
-                Genere = libroDTO.Genere,
-                Anno = libroDTO.Anno
-            };
+                var libro = new Libro
+                {
+                    Isbn = libroDTO.Isbn,
+                    Titolo = libroDTO.Titolo,
+                    Img = libroDTO.Img,
+                    Autore = libroDTO.Autore,
+                    Genere = libroDTO.Genere,
+                    Anno = libroDTO.Anno
+                };
 
-            _context.Libri.Add(libro);
-            _context.SaveChanges();
+                _context.Libri.Add(libro);
+                _context.SaveChanges();
 
-            return CreatedAtRoute("GetLibro", new { isbn = libroDTO.Isbn }, libroDTO);
+                return CreatedAtRoute("GetLibro", new { isbn = libroDTO.Isbn }, libroDTO);
+            }
+            catch (Exception ex)
+            {
+                _logger.Log("Error in CreateLibro: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpDelete("{isbn}", Name = "DeleteLibro")]
@@ -110,16 +135,24 @@ namespace pctp.Controllers
                 return BadRequest();
             }
 
-            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
-            if (libro == null)
+            try
             {
-                return NotFound();
+                var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
+                if (libro == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Libri.Remove(libro);
+                _context.SaveChanges();
+
+                return NoContent();
             }
-
-            _context.Libri.Remove(libro);
-            _context.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.Log("Error in DeleteLibro: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPut("{isbn}", Name = "UpdateLibro")]
@@ -133,21 +166,29 @@ namespace pctp.Controllers
                 return BadRequest();
             }
 
-            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
-            if (libro == null)
+            try
             {
-                return NotFound();
+                var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
+                if (libro == null)
+                {
+                    return NotFound();
+                }
+
+                libro.Titolo = libroDTO.Titolo;
+                libro.Img = libroDTO.Img;
+                libro.Autore = libroDTO.Autore;
+                libro.Genere = libroDTO.Genere;
+                libro.Anno = libroDTO.Anno;
+
+                _context.SaveChanges();
+
+                return NoContent();
             }
-
-            libro.Titolo = libroDTO.Titolo;
-            libro.Img = libroDTO.Img;
-            libro.Autore = libroDTO.Autore;
-            libro.Genere = libroDTO.Genere;
-            libro.Anno = libroDTO.Anno;
-
-            _context.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.Log("Error in UpdateLibro: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPatch("{isbn}", Name = "UpdatePartialLibro")]
@@ -161,37 +202,45 @@ namespace pctp.Controllers
                 return BadRequest();
             }
 
-            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
-            if (libro == null)
+            try
             {
-                return NotFound();
+                var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
+                if (libro == null)
+                {
+                    return NotFound();
+                }
+
+                var libroToPatch = new LibroDTO
+                {
+                    Isbn = libro.Isbn,
+                    Titolo = libro.Titolo,
+                    Img = libro.Img,
+                    Autore = libro.Autore,
+                    Genere = libro.Genere,
+                    Anno = libro.Anno
+                };
+
+                patchDTO.ApplyTo(libroToPatch, ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                libro.Titolo = libroToPatch.Titolo;
+                libro.Img = libroToPatch.Img;
+                libro.Autore = libroToPatch.Autore;
+                libro.Genere = libroToPatch.Genere;
+                libro.Anno = libroToPatch.Anno;
+
+                _context.SaveChanges();
+
+                return NoContent();
             }
-
-            var libroToPatch = new LibroDTO
+            catch (Exception ex)
             {
-                Isbn = libro.Isbn,
-                Titolo = libro.Titolo,
-                Img = libro.Img,
-                Autore = libro.Autore,
-                Genere = libro.Genere,
-                Anno = libro.Anno
-            };
-
-            patchDTO.ApplyTo(libroToPatch, ModelState);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
+                _logger.Log("Error in UpdatePartialLibro: " + ex.Message, "error");
+                return StatusCode(500, "Internal server error");
             }
-
-            libro.Titolo = libroToPatch.Titolo;
-            libro.Img = libroToPatch.Img;
-            libro.Autore = libroToPatch.Autore;
-            libro.Genere = libroToPatch.Genere;
-            libro.Anno = libroToPatch.Anno;
-
-            _context.SaveChanges();
-
-            return NoContent();
         }
     }
 }
