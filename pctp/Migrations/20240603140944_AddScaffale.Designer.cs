@@ -11,7 +11,7 @@ using pctp.Data;
 namespace pctp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240603122346_AddScaffale")]
+    [Migration("20240603140944_AddScaffale")]
     partial class AddScaffale
     {
         /// <inheritdoc />
@@ -45,6 +45,10 @@ namespace pctp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Isbn")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Titolo");
 
                     b.ToTable("SetBooks");
@@ -56,7 +60,8 @@ namespace pctp.Migrations
                             Anno = 1965,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/511suynbMfL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/511suynbMfL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484100"
                         },
                         new
                         {
@@ -64,7 +69,8 @@ namespace pctp.Migrations
                             Anno = 1969,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/41dbYUr0rUL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/41dbYUr0rUL.jpg",
+                            Isbn = "9783161484101"
                         },
                         new
                         {
@@ -72,7 +78,8 @@ namespace pctp.Migrations
                             Anno = 1976,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/412FZmYY0sL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/412FZmYY0sL.jpg",
+                            Isbn = "9783161484102"
                         },
                         new
                         {
@@ -80,7 +87,8 @@ namespace pctp.Migrations
                             Anno = 1981,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/41R38uCEyGL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/41R38uCEyGL.jpg",
+                            Isbn = "9783161484103"
                         },
                         new
                         {
@@ -88,7 +96,8 @@ namespace pctp.Migrations
                             Anno = 1984,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/71yxc8fLNgL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/71yxc8fLNgL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484104"
                         },
                         new
                         {
@@ -96,7 +105,8 @@ namespace pctp.Migrations
                             Anno = 1985,
                             Autore = "Frank Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfYGgvx44ivyiIuNymh8hWpBMpRBWI0HbrQg&s"
+                            Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfYGgvx44ivyiIuNymh8hWpBMpRBWI0HbrQg&s",
+                            Isbn = "9783161484105"
                         },
                         new
                         {
@@ -104,7 +114,8 @@ namespace pctp.Migrations
                             Anno = 2004,
                             Autore = "Brian Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/81tNTZMlczL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/81tNTZMlczL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484106"
                         },
                         new
                         {
@@ -112,7 +123,8 @@ namespace pctp.Migrations
                             Anno = 2006,
                             Autore = "Brian Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://www.ibs.it/images/9788834740378_0_424_0_75.jpg"
+                            Img = "https://www.ibs.it/images/9788834740378_0_424_0_75.jpg",
+                            Isbn = "9783161484107"
                         },
                         new
                         {
@@ -120,7 +132,8 @@ namespace pctp.Migrations
                             Anno = 2007,
                             Autore = "Brian Herbert",
                             Genere = "Fantascienza",
-                            Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXpiuDCTdxqD3xwJgKUbl3NYk0tl3Xd3QEmA&s"
+                            Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXpiuDCTdxqD3xwJgKUbl3NYk0tl3Xd3QEmA&s",
+                            Isbn = "9783161484108"
                         },
                         new
                         {
@@ -128,7 +141,8 @@ namespace pctp.Migrations
                             Anno = 1997,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/51CgZFxNQ0L.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51CgZFxNQ0L.jpg",
+                            Isbn = "9783161484109"
                         },
                         new
                         {
@@ -136,7 +150,8 @@ namespace pctp.Migrations
                             Anno = 1998,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/51KHFmcWGxL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51KHFmcWGxL.jpg",
+                            Isbn = "9783161484110"
                         },
                         new
                         {
@@ -144,7 +159,8 @@ namespace pctp.Migrations
                             Anno = 1999,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/71LUEWuecxL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/71LUEWuecxL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484111"
                         },
                         new
                         {
@@ -152,7 +168,8 @@ namespace pctp.Migrations
                             Anno = 2000,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/71WfG8FffsL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/71WfG8FffsL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484112"
                         },
                         new
                         {
@@ -160,7 +177,8 @@ namespace pctp.Migrations
                             Anno = 2003,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/81GfdgEiHyL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/81GfdgEiHyL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484113"
                         },
                         new
                         {
@@ -168,7 +186,8 @@ namespace pctp.Migrations
                             Anno = 2005,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/710OqzcvPML._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/710OqzcvPML._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484114"
                         },
                         new
                         {
@@ -176,7 +195,8 @@ namespace pctp.Migrations
                             Anno = 2007,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/51Qr0XQQPXL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51Qr0XQQPXL.jpg",
+                            Isbn = "9783161484115"
                         },
                         new
                         {
@@ -184,7 +204,8 @@ namespace pctp.Migrations
                             Anno = 2016,
                             Autore = "J. K. Rowling",
                             Genere = "Fantasy",
-                            Img = "https://m.media-amazon.com/images/I/81pwzk0tilL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/81pwzk0tilL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484116"
                         },
                         new
                         {
@@ -192,7 +213,8 @@ namespace pctp.Migrations
                             Anno = 1990,
                             Autore = "Michael Crichton",
                             Genere = "Fantascienza",
-                            Img = "https://m.media-amazon.com/images/I/51KDF4N3J5L._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51KDF4N3J5L._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484117"
                         },
                         new
                         {
@@ -200,7 +222,8 @@ namespace pctp.Migrations
                             Anno = 1982,
                             Autore = "Alan Moore",
                             Genere = "Distopia",
-                            Img = "https://m.media-amazon.com/images/I/81Aw7JnvLTL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/81Aw7JnvLTL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484118"
                         },
                         new
                         {
@@ -208,7 +231,8 @@ namespace pctp.Migrations
                             Anno = 1980,
                             Autore = "Umberto Eco",
                             Genere = "Giallo",
-                            Img = "https://m.media-amazon.com/images/I/61Aa9Yic8AL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/61Aa9Yic8AL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484119"
                         },
                         new
                         {
@@ -216,7 +240,8 @@ namespace pctp.Migrations
                             Anno = 1892,
                             Autore = "Arthur Conan Doyle",
                             Genere = "Giallo",
-                            Img = "https://m.media-amazon.com/images/I/51yGQ7QMW8L.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51yGQ7QMW8L.jpg",
+                            Isbn = "9783161484120"
                         },
                         new
                         {
@@ -224,7 +249,8 @@ namespace pctp.Migrations
                             Anno = 1905,
                             Autore = "Arthur Conan Doyle",
                             Genere = "Giallo",
-                            Img = "https://m.media-amazon.com/images/I/51L6qiJg1BL.jpg"
+                            Img = "https://m.media-amazon.com/images/I/51L6qiJg1BL.jpg",
+                            Isbn = "9783161484121"
                         },
                         new
                         {
@@ -232,7 +258,8 @@ namespace pctp.Migrations
                             Anno = 1934,
                             Autore = "Agatha Christie",
                             Genere = "Giallo",
-                            Img = "https://m.media-amazon.com/images/I/71-n8WO0HFL._AC_UF1000,1000_QL80_.jpg"
+                            Img = "https://m.media-amazon.com/images/I/71-n8WO0HFL._AC_UF1000,1000_QL80_.jpg",
+                            Isbn = "9783161484122"
                         },
                         new
                         {
@@ -240,7 +267,8 @@ namespace pctp.Migrations
                             Anno = 1842,
                             Autore = "Alessandro Manzoni",
                             Genere = "Storico",
-                            Img = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/I_promessi_sposi_-_2nd_edition_cover.jpg/643px-I_promessi_sposi_-_2nd_edition_cover.jpg"
+                            Img = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/I_promessi_sposi_-_2nd_edition_cover.jpg/643px-I_promessi_sposi_-_2nd_edition_cover.jpg",
+                            Isbn = "9783161484123"
                         },
                         new
                         {
@@ -248,7 +276,8 @@ namespace pctp.Migrations
                             Anno = 2002,
                             Autore = "Andrea Frediani",
                             Genere = "Storico",
-                            Img = "https://www.ibs.it/images/9788854144026_0_536_0_75.jpg"
+                            Img = "https://www.ibs.it/images/9788854144026_0_536_0_75.jpg",
+                            Isbn = "9783161484124"
                         });
                 });
 #pragma warning restore 612, 618

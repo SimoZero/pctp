@@ -19,7 +19,8 @@ namespace pctp.Data
                                     Autore = parts[1],
                                     Genere = parts[2],
                                     Anno = int.Parse(parts[3]),
-                                    Img = parts[4]
+                                    Img = parts[4],
+                                    Isbn = parts[5]
                                 })
                                 .ToList();
 
