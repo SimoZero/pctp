@@ -14,7 +14,5 @@ namespace pctp.Models
         public required string Autore { get; set; }
         public required string Genere { get; set; }
         public int Anno { get; set; }
-
-        
     }
 }

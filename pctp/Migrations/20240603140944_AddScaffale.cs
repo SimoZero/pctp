@@ -13,7 +13,7 @@ namespace pctp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "SetBooks",
+                name: "Libri",
                 columns: table => new
                 {
                     Titolo = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -25,11 +25,11 @@ namespace pctp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SetBooks", x => x.Titolo);
+                    table.PrimaryKey("PK_Libri", x => x.Titolo);
                 });
 
             migrationBuilder.InsertData(
-                table: "SetBooks",
+                table: "Libri",
                 columns: new[] { "Titolo", "Anno", "Autore", "Genere", "Img", "Isbn" },
                 values: new object[,]
                 {
@@ -65,7 +65,7 @@ namespace pctp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SetBooks");
+                name: "Libri");
         }
     }
 }

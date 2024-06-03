@@ -51,7 +51,7 @@ namespace pctp.Migrations
 
                     b.HasKey("Titolo");
 
-                    b.ToTable("SetBooks");
+                    b.ToTable("Libri");
 
                     b.HasData(
                         new

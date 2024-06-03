@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using pctp.Models;
 using pctp.Models.Dto;
+using pctp.Data;
 using prova999.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace pctp.Controllers
 {
@@ -10,37 +14,62 @@ namespace pctp.Controllers
     public class LibroAPIController : ControllerBase
     {
         private readonly ILogging _logger;
-        public LibroAPIController(ILogging logger)
+        private readonly ApplicationDbContext _context;
+
+        public LibroAPIController(ILogging logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<LibroDTO>> GetLibros()
         {
             _logger.Log("Getting all libros", "");
-            return Ok(LibroStore.libroList);
+            var libros = _context.Libri.ToList();
+            var libroDTOs = libros.Select(libro => new LibroDTO
+            {
+                Isbn = libro.Isbn,
+                Titolo = libro.Titolo,
+                Img = libro.Img,
+                Autore = libro.Autore,
+                Genere = libro.Genere,
+                Anno = libro.Anno
+            });
+
+            return Ok(libroDTOs);
         }
 
-        [HttpGet("{id:int}", Name = "GetLibro")]
+        [HttpGet("{isbn}", Name = "GetLibro")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<LibroDTO> GetLibro(int id)
+        public ActionResult<LibroDTO> GetLibro(string isbn)
         {
-            if (id == 0)
+            if (string.IsNullOrEmpty(isbn))
             {
-                _logger.Log("Get Libro Error with Id" + id, "error");
+                _logger.Log("Get Libro Error with Isbn " + isbn, "error");
                 return BadRequest();
             }
 
-            var libro = LibroStore.libroList.FirstOrDefault(u => u.Id == id);
+            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
             if (libro == null)
             {
                 return NotFound();
             }
 
-            return Ok(libro);
+            var libroDTO = new LibroDTO
+            {
+                Isbn = libro.Isbn,
+                Titolo = libro.Titolo,
+                Img = libro.Img,
+                Autore = libro.Autore,
+                Genere = libro.Genere,
+                Anno = libro.Anno
+            };
+
+            return Ok(libroDTO);
         }
 
         [HttpPost]
@@ -49,81 +78,90 @@ namespace pctp.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<LibroDTO> CreateLibro([FromBody] LibroDTO libroDTO)
         {
-            if (LibroStore.libroList.Any(u => u.Name.ToLower() == libroDTO.Name.ToLower()))
-            {
-                ModelState.AddModelError("", "Libro already exists!");
-                return BadRequest(ModelState);
-            }
-
             if (libroDTO == null)
             {
                 return BadRequest(libroDTO);
             }
-            if (libroDTO.Id > 0)
+
+            var libro = new Libro
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+                Isbn = libroDTO.Isbn,
+                Titolo = libroDTO.Titolo,
+                Img = libroDTO.Img,
+                Autore = libroDTO.Autore,
+                Genere = libroDTO.Genere,
+                Anno = libroDTO.Anno
+            };
 
-            var newId = (LibroStore.libroList.OrderByDescending(u => u.Id).FirstOrDefault()?.Id ?? 0) + 1;
-            libroDTO.Id = newId;
-            LibroStore.libroList.Add(libroDTO);
+            _context.Libri.Add(libro);
+            _context.SaveChanges();
 
-            return CreatedAtRoute("GetLibro", new { id = libroDTO.Id }, libroDTO);
+            return CreatedAtRoute("GetLibro", new { isbn = libroDTO.Isbn }, libroDTO);
         }
 
-        [HttpDelete("{id:int}", Name = "DeleteLibro")]
+        [HttpDelete("{isbn}", Name = "DeleteLibro")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteLibro(int id)
+        public IActionResult DeleteLibro(string isbn)
         {
-            if (id <= 0)
+            if (string.IsNullOrEmpty(isbn))
             {
                 return BadRequest();
             }
-            var libro = LibroStore.libroList.FirstOrDefault(u => u.Id == id);
-            if (libro == null)
-            {
-                return NotFound();
-            }
-            LibroStore.libroList.Remove(libro);
-            return NoContent();
-        }
 
-        [HttpPut("{id:int}", Name = "UpdateLibro")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdateLibro(int id, [FromBody] LibroDTO libroDTO)
-        {
-            if (libroDTO == null || id != libroDTO.Id)
-            {
-                return BadRequest();
-            }
-            var libro = LibroStore.libroList.FirstOrDefault(u => u.Id == id);
+            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
             if (libro == null)
             {
                 return NotFound();
             }
 
-            libro.Name = libroDTO.Name;
-            libro.Sqft = libroDTO.Sqft;
-            libro.Occupancy = libroDTO.Occupancy;
+            _context.Libri.Remove(libro);
+            _context.SaveChanges();
 
             return NoContent();
         }
 
-        [HttpPatch("{id:int}", Name = "UpdatePartialLibro")]
+        [HttpPut("{isbn}", Name = "UpdateLibro")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult UpdatePartialLibro(int id, [FromBody] JsonPatchDocument<LibroDTO> patchDTO)
+        public IActionResult UpdateLibro(string isbn, [FromBody] LibroDTO libroDTO)
         {
-            if (patchDTO == null || id <= 0)
+            if (libroDTO == null || isbn != libroDTO.Isbn)
             {
                 return BadRequest();
             }
-            var libro = LibroStore.libroList.FirstOrDefault(u => u.Id == id);
+
+            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
+            if (libro == null)
+            {
+                return NotFound();
+            }
+
+            libro.Titolo = libroDTO.Titolo;
+            libro.Img = libroDTO.Img;
+            libro.Autore = libroDTO.Autore;
+            libro.Genere = libroDTO.Genere;
+            libro.Anno = libroDTO.Anno;
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{isbn}", Name = "UpdatePartialLibro")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult UpdatePartialLibro(string isbn, [FromBody] JsonPatchDocument<LibroDTO> patchDTO)
+        {
+            if (patchDTO == null || string.IsNullOrEmpty(isbn))
+            {
+                return BadRequest();
+            }
+
+            var libro = _context.Libri.FirstOrDefault(u => u.Isbn == isbn);
             if (libro == null)
             {
                 return NotFound();
@@ -131,10 +169,12 @@ namespace pctp.Controllers
 
             var libroToPatch = new LibroDTO
             {
-                Id = libro.Id,
-                Name = libro.Name,
-                Sqft = libro.Sqft,
-                Occupancy = libro.Occupancy
+                Isbn = libro.Isbn,
+                Titolo = libro.Titolo,
+                Img = libro.Img,
+                Autore = libro.Autore,
+                Genere = libro.Genere,
+                Anno = libro.Anno
             };
 
             patchDTO.ApplyTo(libroToPatch, ModelState);
@@ -143,9 +183,13 @@ namespace pctp.Controllers
                 return BadRequest(ModelState);
             }
 
-            libro.Name = libroToPatch.Name;
-            libro.Sqft = libroToPatch.Sqft;
-            libro.Occupancy = libroToPatch.Occupancy;
+            libro.Titolo = libroToPatch.Titolo;
+            libro.Img = libroToPatch.Img;
+            libro.Autore = libroToPatch.Autore;
+            libro.Genere = libroToPatch.Genere;
+            libro.Anno = libroToPatch.Anno;
+
+            _context.SaveChanges();
 
             return NoContent();
         }

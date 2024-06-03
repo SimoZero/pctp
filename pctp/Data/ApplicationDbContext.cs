@@ -5,7 +5,7 @@ namespace pctp.Data
 {
     public class ApplicationDbContext: DbContext
     {
-        public DbSet<Libro> SetBooks { get; set; }
+        public DbSet<Libro> Libri { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
