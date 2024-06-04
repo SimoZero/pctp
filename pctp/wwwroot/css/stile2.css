@@ -24,6 +24,7 @@
 .immagine {
     height: 500px;
     width: 300px;
+    padding: 10px
 }
 
 #divLibri {
@@ -38,4 +39,9 @@
 #bottoneIndietro {
     background-color: #d33726;
     color: navajowhite;
+}
+
+.bg-dark {
+    background-color: black;
+    color: white;
 }
